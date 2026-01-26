@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<!-- saved from url=(0035)http://127.0.0.1:5501/DOM/end6.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LifeSync Pro | Dark Dashboard</title>
+<style>
+:root {
+    --accentblue: #60a5fa;
+    --darkbg: #0f172a;
+    --cardbg: rgba(30, 41, 59, 0.7);
+    --lighttext: #f1f5f9;
+    --dimtext: #94a3b8;
+    --bordercolor: rgba(255, 255, 255, 0.1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    /* Deep Night Mesh Gradient */
+    background-color: var(--darkbg);
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(96, 165, 250, 0.15) 0, transparent 50%), 
+        radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.15) 0, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(15, 23, 42, 0.5) 0, transparent 50%);
+    background-attachment: fixed;
+    color: var(--lighttext);
+    padding: 60px 20px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.appshell {
+    width: 100%;
+    max-width: 600px;
+    background: var(--cardbg);
+    backdrop-filter: blur(16px);
+    border-radius: 28px;
+    padding: 40px;
+    border: 1px solid var(--bordercolor);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+header {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.2rem;
+    color: var(--lighttext);
+    letter-spacing: -1px;
+}
+
+.tagline {
+    font-size: 1rem;
+    color: var(--dimtext);
+    margin-top: 5px;
+}
+
+.metriccontainer {
+    background: rgba(15, 23, 42, 0.5);
+    padding: 24px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    border: 1px solid var(--bordercolor);
+}
+
+.metricheader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.bartrack {
+    background: #1e293b;
+    height: 12px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#barfill {
+    background: linear-gradient(90deg, #3b82f6 0%, #2dd4bf 100%);
+    height: 100%;
+    width: 0%;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+}
+
+.formarea {
+    margin-bottom: 30px;
+}
+
+.inputfield {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 12px;
+    border: 1px solid var(--bordercolor);
+    border-radius: 12px;
+    background: #1e293b;
+    color: white;
+}
+
+.inputfield::placeholder { color: #64748b; }
+
+.row {
+    display: flex;
+    gap: 12px;
+}
+
+.selectfield {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid var(--bordercolor);
+    border-radius: 12px;
+    background: #1e293b;
+    color: white;
+}
+
+.addbtn, .clearbtn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.addbtn {
+    background: var(--accentblue);
+    color: white;
+}
+
+.clearbtn {
+    background: transparent;
+    color: var(--dimtext);
+    border: 1px solid var(--bordercolor);
+}
+
+.addbtn:hover { background: #3b82f6; transform: translateY(-1px); }
+.clearbtn:hover { background: rgba(255,255,255,0.05); color: white; }
+
+.navfilter {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--bordercolor);
+}
+
+.navbtn {
+    background: none;
+    border: none;
+    padding-bottom: 12px;
+    color: var(--dimtext);
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.navbtn.active {
+    color: var(--accentblue);
+    border-bottom: 3px solid var(--accentblue);
+}
+
+#taskdisplay {
+    list-style: none;
+}
+
+.tasknode {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px;
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px solid var(--bordercolor);
+    border-radius: 16px;
+    margin-bottom: 12px;
+    transition: border 0.2s;
+}
+
+.tasknode:hover { border-color: rgba(255,255,255,0.2); }
+
+.tasknode.overdue { border-left: 5px solid #f87171; }
+
+.tasknode.done {
+    opacity: 0.4;
+}
+
+.tasknode.done .tasklabel {
+    text-decoration: line-through;
+}
+
+.leftgroup {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.priodot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.phigh { background: #f87171; box-shadow: 0 0 8px #f87171; }
+.pmedium { background: #fbbf24; }
+.plow { background: #34d399; }
+
+.btnremove {
+    color: #475569;
+    border: none;
+    background: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+}
+
+.btnremove:hover { color: #f87171; }
+
+.tasklabel[contenteditable]:focus {
+    outline: none;
+    border-bottom: 2px solid var(--accentblue);
+}
+</style>
+</head>
+<body>
+
+<div class="appshell">
+    <header>
+        <h1>LifeSync Pro</h1>
+        <p class="tagline"><i>Plan. Act. Repeat.</i></p>
+    </header>
+
+    <div class="metriccontainer">
+        <div class="metricheader">
+            <span>Efficiency Level</span>
+            <span id="scoreval">0%</span>
+        </div>
+        <div class="bartrack"><div id="barfill" style="width: 0%;"></div></div>
+    </div>
+
+    <div class="formarea">
+        <input type="text" id="goalname" class="inputfield" placeholder="Target for today...">
+        <div class="row">
+            <input type="date" id="goaldate" class="selectfield">
+            <select id="goalprio" class="selectfield">
+                <option value="low">Low</option>
+                <option value="medium" selected="">Medium</option>
+                <option value="high">High</option>
+            </select>
+            <button id="btnsubmit" class="addbtn">Add Task</button>
+            <button id="btnclear" class="clearbtn">Clear Done</button>
+        </div>
+    </div>
+
+    <nav class="navfilter">
+        <button class="navbtn active" onclick="updateFilter(&#39;all&#39;)">All</button>
+        <button class="navbtn" onclick="updateFilter(&#39;pending&#39;)">Pending</button>
+        <button class="navbtn" onclick="updateFilter(&#39;done&#39;)">Done</button>
+    </nav>
+
+    <ul id="taskdisplay"></ul>
+</div>
+
+<script>
+let masterList = JSON.parse(localStorage.getItem('lifesync_data')) || [];
+let currentTab = 'all';
+
+function saveData() {
+    localStorage.setItem('lifesync_data', JSON.stringify(masterList));
+}
+
+function addNewGoal() {
+    const nameInp = document.getElementById('goalname');
+    const dateInp = document.getElementById('goaldate');
+    const prioInp = document.getElementById('goalprio');
+
+    if (!nameInp.value.trim()) return;
+
+    masterList.unshift({
+        uid: Date.now(),
+        title: nameInp.value,
+        due: dateInp.value || 'Someday',
+        priority: prioInp.value,
+        isDone: false
+    });
+
+    nameInp.value = '';
+    saveData();
+    buildUI();
+}
+
+function toggleGoal(uid) {
+    masterList = masterList.map(g => g.uid === uid ? {...g, isDone: !g.isDone} : g);
+    saveData();
+    buildUI();
+}
+
+function deleteGoal(uid) {
+    masterList = masterList.filter(g => g.uid !== uid);
+    saveData();
+    buildUI();
+}
+
+function editGoal(uid, newTitle) {
+    masterList = masterList.map(g => g.uid === uid ? {...g, title: newTitle} : g);
+    saveData();
+}
+
+function updateFilter(tab) {
+    currentTab = tab;
+    const btns = document.getElementsByClassName('navbtn');
+    for (let btn of btns) {
+        btn.classList.remove('active');
+        if (btn.innerText.toLowerCase() === tab) btn.classList.add('active');
+    }
+    buildUI();
+}
+
+function clearCompleted() {
+    masterList = masterList.filter(g => !g.isDone);
+    saveData();
+    buildUI();
+}
+
+function buildUI() {
+    const listEl = document.getElementById('taskdisplay');
+    listEl.innerHTML = '';
+
+    const finished = masterList.filter(g => g.isDone).length;
+    const total = masterList.length;
+    const ratio = total === 0 ? 0 : Math.round((finished / total) * 100);
+
+    document.getElementById('barfill').style.width = ratio + '%';
+    document.getElementById('scoreval').innerText = ratio + '%';
+
+    const today = new Date().toISOString().split('T')[0];
+
+    masterList.forEach(goal => {
+        if (currentTab === 'pending' && goal.isDone) return;
+        if (currentTab === 'done' && !goal.isDone) return;
+
+        const li = document.createElement('li');
+        li.className = "tasknode" + (goal.isDone ? " done" : "") + (goal.due < today && !goal.isDone ? " overdue" : "");
+
+        li.innerHTML = `
+            <div class="leftgroup">
+                <input type="checkbox" ${goal.isDone ? 'checked' : ''} onclick="toggleGoal(${goal.uid})">
+                <div class="priodot p${goal.priority}"></div>
+                <div>
+                    <div class="tasklabel" contenteditable>${goal.title}</div>
+                    <div style="font-size:0.7rem; color:#64748b;">${goal.due}</div>
+                </div>
+            </div>
+            <button class="btnremove" onclick="deleteGoal(${goal.uid})">&times;</button>
+        `;
+
+        const labelDiv = li.querySelector('.tasklabel');
+        labelDiv.addEventListener('blur', () => editGoal(goal.uid, labelDiv.innerText.trim()));
+        listEl.appendChild(li);
+    });
+}
+
+document.getElementById('btnsubmit').addEventListener('click', addNewGoal);
+document.getElementById('btnclear').addEventListener('click', clearCompleted);
+document.getElementById('goalname').addEventListener('keypress', (e) => e.key === 'Enter' && addNewGoal());
+
+buildUI();
+</script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+
+</body></html>
