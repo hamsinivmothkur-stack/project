@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<!-- saved from url=(0056)http://127.0.0.1:5500/activities/blood-donor-finder.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Community Blood Donor Finder 🩸 | Find Donors Fast</title>
+  <meta name="description" content="Find blood donors quickly. Filter by blood group, search by city, and request help from available donors in your community.">
+  <link href="./Community Blood Donor Finder 🩸 _ Find Donors Fast_files/css2" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121c;
+      --bg-card: rgba(18, 18, 28, 0.8);
+      --bg-glass: rgba(255, 255, 255, 0.035);
+      --border: rgba(255, 255, 255, 0.07);
+      --border-hover: rgba(255, 255, 255, 0.14);
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --red: #dc2626;
+      --red-light: #ef4444;
+      --red-soft: rgba(220, 38, 38, 0.10);
+      --red-glow: rgba(220, 38, 38, 0.25);
+      --red-border: rgba(220, 38, 38, 0.25);
+      --green: #10b981;
+      --green-soft: rgba(16, 185, 129, 0.10);
+      --green-border: rgba(16, 185, 129, 0.25);
+      --accent: #e11d48;
+      --accent-glow: rgba(225, 29, 72, 0.25);
+      --amber: #f59e0b;
+      --amber-soft: rgba(245, 158, 11, 0.10);
+      --amber-border: rgba(245, 158, 11, 0.25);
+      --indigo: #6366f1;
+      --indigo-glow: rgba(99, 102, 241, 0.25);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Ambient ──────────────────────────────── */
+    .ambient { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .ambient .orb { position: absolute; border-radius: 50%; filter: blur(130px); opacity: 0.12; animation: drift 22s ease-in-out infinite; }
+    .ambient .orb:nth-child(1) { width: 550px; height: 550px; background: var(--accent); top: -8%; left: -5%; }
+    .ambient .orb:nth-child(2) { width: 400px; height: 400px; background: #6366f1; bottom: -6%; right: -3%; animation-delay: -8s; }
+    .ambient .orb:nth-child(3) { width: 350px; height: 350px; background: #f472b6; top: 45%; left: 55%; animation-delay: -15s; }
+    @keyframes drift {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -25px) scale(1.04); }
+      66% { transform: translate(-20px, 15px) scale(0.96); }
+    }
+
+    /* ── App ──────────────────────────────────── */
+    .app { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    /* ── Header ───────────────────────────────── */
+    .header { text-align: center; margin-bottom: 44px; }
+    .header .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--red-soft); border: 1px solid var(--red-border);
+      padding: 6px 16px; border-radius: 100px;
+      font-size: 0.78rem; font-weight: 600; color: var(--red-light);
+      margin-bottom: 18px;
+    }
+    .header h1 {
+      font-size: clamp(1.9rem, 4.5vw, 3rem);
+      font-weight: 800; letter-spacing: -0.03em;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--red-light) 60%, #f472b6 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; margin-bottom: 10px;
+    }
+    .header p { color: var(--text-secondary); font-size: 1rem; max-width: 540px; margin: 0 auto; line-height: 1.6; }
+
+    /* ── Stats ─────────────────────────────────── */
+    .stats-row { display: flex; justify-content: center; gap: 16px; margin-bottom: 32px; flex-wrap: wrap; }
+    .stat-pill {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--bg-glass); border: 1px solid var(--border);
+      padding: 10px 20px; border-radius: 100px;
+      backdrop-filter: blur(10px); transition: var(--transition);
+    }
+    .stat-pill:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+    .stat-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .stat-dot.total { background: var(--indigo); }
+    .stat-dot.available { background: var(--green); }
+    .stat-dot.requested { background: var(--amber); }
+    .stat-dot.showing { background: var(--red-light); }
+    .stat-val { font-size: 1.15rem; font-weight: 700; }
+    .stat-lbl { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* ── Controls ──────────────────────────────── */
+    .controls { display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap; align-items: center; }
+
+    .search-box { flex: 1; min-width: 220px; position: relative; }
+    .search-box .icon {
+      position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+      font-size: 1rem; color: var(--text-muted); pointer-events: none; transition: var(--transition);
+    }
+    .search-box input {
+      width: 100%; padding: 12px 16px 12px 44px;
+      background: var(--bg-glass); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--text-primary);
+      font-family: inherit; font-size: 0.9rem; outline: none;
+      transition: var(--transition); backdrop-filter: blur(10px);
+    }
+    .search-box input::placeholder { color: var(--text-muted); }
+    .search-box input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+    .search-box input:focus + .icon { color: var(--accent); }
+
+    .dropdown-wrap { position: relative; }
+    .dropdown {
+      appearance: none; padding: 12px 40px 12px 16px;
+      background: var(--bg-glass); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--text-primary);
+      font-family: inherit; font-size: 0.9rem; cursor: pointer;
+      outline: none; transition: var(--transition); backdrop-filter: blur(10px);
+    }
+    .dropdown:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+    .dropdown option { background: #1a1a2e; color: var(--text-primary); }
+    .dropdown-arrow {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      font-size: 0.7rem; color: var(--text-muted); pointer-events: none;
+    }
+
+    .sort-btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 12px 16px; border: 1px solid var(--border);
+      border-radius: var(--radius); background: var(--bg-glass);
+      color: var(--text-secondary); font-family: inherit;
+      font-size: 0.85rem; font-weight: 500; cursor: pointer;
+      transition: var(--transition); backdrop-filter: blur(10px); white-space: nowrap;
+    }
+    .sort-btn:hover { color: var(--text-primary); border-color: var(--border-hover); }
+    .sort-btn.active { color: var(--accent); border-color: var(--accent); }
+    .sort-arrow { font-size: 0.7rem; transition: transform 0.2s; }
+    .sort-btn.desc .sort-arrow { transform: rotate(180deg); }
+
+    /* ── Donor Grid ────────────────────────────── */
+    .donor-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 18px;
+    }
+
+    /* ── Donor Card ────────────────────────────── */
+    .donor-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 0;
+      backdrop-filter: blur(16px); transition: var(--transition);
+      overflow: hidden; display: flex; flex-direction: column;
+      animation: cardIn 0.45s ease-out both;
+    }
+    .donor-card:hover { border-color: var(--border-hover); transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+    @keyframes cardIn { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+
+    .card-top {
+      display: flex; align-items: center; gap: 14px;
+      padding: 24px 24px 0;
+    }
+    .blood-badge {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; font-weight: 800; flex-shrink: 0;
+      background: var(--red-soft); color: var(--red-light);
+      border: 1px solid var(--red-border);
+    }
+    .donor-name { font-size: 1.05rem; font-weight: 700; }
+    .donor-username { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+
+    .card-body { padding: 18px 24px; flex: 1; }
+    .info-row {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.83rem; color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+    .info-row:last-child { margin-bottom: 0; }
+    .info-row .emoji { font-size: 0.95rem; width: 20px; text-align: center; }
+
+    .availability-tag {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: 100px;
+      font-size: 0.73rem; font-weight: 600;
+    }
+    .availability-tag.available { background: var(--green-soft); color: var(--green); border: 1px solid var(--green-border); }
+    .availability-tag.unavailable { background: var(--red-soft); color: var(--red-light); border: 1px solid var(--red-border); }
+    .avail-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .avail-dot.available { background: var(--green); }
+    .avail-dot.unavailable { background: var(--red-light); }
+
+    .card-footer { padding: 0 24px 24px; }
+    .request-btn {
+      width: 100%; padding: 12px;
+      border: 1px solid var(--red-border); border-radius: var(--radius-sm);
+      background: var(--red-soft); color: var(--red-light);
+      font-family: inherit; font-size: 0.88rem; font-weight: 600;
+      cursor: pointer; transition: var(--transition);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .request-btn:hover:not(.sent) {
+      background: var(--accent); border-color: var(--accent);
+      color: #fff; box-shadow: 0 4px 18px var(--accent-glow);
+    }
+    .request-btn.sent {
+      background: var(--green-soft); border-color: var(--green-border);
+      color: var(--green); cursor: default;
+    }
+
+    /* ── States ────────────────────────────────── */
+    .loader { display: flex; flex-direction: column; align-items: center; padding: 70px; gap: 16px; }
+    .spinner { width: 42px; height: 42px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loader-text { color: var(--text-muted); font-size: 0.88rem; }
+    .empty { text-align: center; padding: 70px 20px; }
+    .empty .emoji { font-size: 2.8rem; margin-bottom: 14px; }
+    .empty h3 { font-size: 1.15rem; margin-bottom: 6px; }
+    .empty p { color: var(--text-muted); font-size: 0.88rem; }
+
+    /* ── Responsive ────────────────────────────── */
+    @media (max-width: 640px) {
+      .app { padding: 24px 14px 60px; }
+      .controls { flex-direction: column; }
+      .donor-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambient"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="badge">🩸 Life-Saving Network</div>
+      <h1>Community Blood Donor Finder</h1>
+      <p>Quickly locate blood donors in your area. Filter by blood group, search by city, and send help requests instantly.</p>
+    </header>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-pill">
+        <span class="stat-dot total"></span>
+        <div><div class="stat-val" id="statTotal">10</div><div class="stat-lbl">Total Donors</div></div>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-dot available"></span>
+        <div><div class="stat-val" id="statAvailable">5</div><div class="stat-lbl">Available</div></div>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-dot requested"></span>
+        <div><div class="stat-val" id="statRequested">0</div><div class="stat-lbl">Requested</div></div>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-dot showing"></span>
+        <div><div class="stat-val" id="statShowing">0</div><div class="stat-lbl">Showing</div></div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <div class="search-box">
+        <input type="text" id="citySearch" placeholder="Search donors by city…">
+        <span class="icon">🔍</span>
+      </div>
+      <div class="dropdown-wrap">
+        <select class="dropdown" id="bloodFilter">
+          <option value="all">All Blood Groups</option>
+          <option value="A+">A+</option>
+          <option value="A−">A−</option>
+          <option value="B+">B+</option>
+          <option value="B−">B−</option>
+          <option value="AB+">AB+</option>
+          <option value="AB−">AB−</option>
+          <option value="O+">O+</option>
+          <option value="O−">O−</option>
+        </select>
+        <span class="dropdown-arrow">▼</span>
+      </div>
+      <button class="sort-btn" id="sortBtn" title="Sort by availability">
+        <span>Sort: Availability</span>
+        <span class="sort-arrow">▲</span>
+      </button>
+    </div>
+
+    <!-- Grid -->
+    <div id="donorGrid" class="donor-grid"><div class="empty"><div class="emoji">🔎</div><h3>No donors found</h3><p>Try a different blood group or city.</p></div></div>
+  </div>
+
+<script>
+  // ── State ─────────────────────────────────
+  let donors = [];
+  let selectedBloodGroup = 'all';
+  let requestStatus = {};     // { [donorId]: true }
+  let citySearch = '';
+  let sortActive = false;
+  let sortAsc = true;         // true = available first
+
+  // ── Blood Groups ──────────────────────────
+  const bloodGroups = ['A+', 'A−', 'B+', 'B−', 'AB+', 'AB−', 'O+', 'O−'];
+
+  function pseudoRand(id) {
+    const x = Math.sin(id * 9301 + 49297) * 49297;
+    return Math.abs(x - Math.floor(x));
+  }
+
+  function mapUser(user) {
+    const bgIndex = Math.floor(pseudoRand(user.id) * bloodGroups.length);
+    const available = pseudoRand(user.id * 7) > 0.3;
+    return {
+      id: user.id,
+      name: user.name,
+      username: '@' + user.username.toLowerCase(),
+      email: user.email,
+      phone: user.phone,
+      city: user.address?.city || 'Unknown',
+      bloodGroup: bloodGroups[bgIndex],
+      available,
+      website: user.website,
+      company: user.company?.name || ''
+    };
+  }
+
+  // ── Fetch ─────────────────────────────────
+  async function fetchDonors() {
+    try {
+      const res = await fetch('https://jsonplaceholder.typicode.com/users');
+      const users = await res.json();
+      donors = users.map(mapUser);
+      render();
+    } catch {
+      document.getElementById('donorGrid').innerHTML =
+        '<div class="empty"><div class="emoji">⚠️</div><h3>Failed to load donors</h3><p>Check your connection and refresh.</p></div>';
+    }
+  }
+
+  // ── Filter ────────────────────────────────
+  function getFiltered() {
+    let list = [...donors];
+
+    if (selectedBloodGroup !== 'all') {
+      list = list.filter(d => d.bloodGroup === selectedBloodGroup);
+    }
+
+    if (citySearch.trim()) {
+      const q = citySearch.toLowerCase();
+      list = list.filter(d => d.city.toLowerCase().includes(q));
+    }
+
+    if (sortActive) {
+      list.sort((a, b) => {
+        const aVal = a.available ? 1 : 0;
+        const bVal = b.available ? 1 : 0;
+        return sortAsc ? bVal - aVal : aVal - bVal;
+      });
+    }
+
+    return list;
+  }
+
+  // ── Render ────────────────────────────────
+  function render() {
+    const filtered = getFiltered();
+    const availableCount = donors.filter(d => d.available).length;
+    const requestedCount = Object.keys(requestStatus).length;
+
+    document.getElementById('statTotal').textContent = donors.length;
+    document.getElementById('statAvailable').textContent = availableCount;
+    document.getElementById('statRequested').textContent = requestedCount;
+    document.getElementById('statShowing').textContent = filtered.length;
+
+    const grid = document.getElementById('donorGrid');
+
+    if (filtered.length === 0) {
+      grid.innerHTML = '<div class="empty"><div class="emoji">🔎</div><h3>No donors found</h3><p>Try a different blood group or city.</p></div>';
+      return;
+    }
+
+    grid.innerHTML = filtered.map((d, i) => {
+      const isSent = requestStatus[d.id];
+      return `
+        <div class="donor-card" style="animation-delay:${i * 0.05}s">
+          <div class="card-top">
+            <div class="blood-badge">${d.bloodGroup}</div>
+            <div>
+              <div class="donor-name">${d.name}</div>
+              <div class="donor-username">${d.username}</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="info-row">
+              <span class="emoji">🏙️</span>
+              <span>${d.city}</span>
+            </div>
+            <div class="info-row">
+              <span class="emoji">📞</span>
+              <span>${d.phone}</span>
+            </div>
+            <div class="info-row">
+              <span class="emoji">📧</span>
+              <span>${d.email}</span>
+            </div>
+            <div class="info-row" style="margin-top:14px">
+              <span class="availability-tag ${d.available ? 'available' : 'unavailable'}">
+                <span class="avail-dot ${d.available ? 'available' : 'unavailable'}"></span>
+                ${d.available ? 'Available' : 'Unavailable'}
+              </span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button
+              id="req-${d.id}"
+              class="request-btn${isSent ? ' sent' : ''}"
+              onclick="requestHelp(${d.id})"
+              ${!d.available && !isSent ? 'disabled style="opacity:0.4;cursor:not-allowed"' : ''}
+            >${isSent ? 'Request Sent ✅' : '🩸 Request Help'}</button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  // ── Request ───────────────────────────────
+  function requestHelp(id) {
+    if (requestStatus[id]) return;
+    const donor = donors.find(d => d.id === id);
+    if (!donor || !donor.available) return;
+    requestStatus[id] = true;
+    render();
+  }
+
+  // ── Listeners ─────────────────────────────
+  document.getElementById('citySearch').addEventListener('input', e => {
+    citySearch = e.target.value;
+    render();
+  });
+
+  document.getElementById('bloodFilter').addEventListener('change', e => {
+    selectedBloodGroup = e.target.value;
+    render();
+  });
+
+  document.getElementById('sortBtn').addEventListener('click', () => {
+    const btn = document.getElementById('sortBtn');
+    if (!sortActive) {
+      sortActive = true; sortAsc = true;
+      btn.classList.add('active');
+    } else if (sortAsc) {
+      sortAsc = false; btn.classList.add('desc');
+    } else {
+      sortActive = false; sortAsc = true;
+      btn.classList.remove('active', 'desc');
+    }
+    render();
+  });
+
+  // ── Init ──────────────────────────────────
+  fetchDonors();
+</script>
+
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+
+
+<veepn-lock-screen><template shadowrootmode="open"><style>html{box-sizing:border-box;text-size-adjust:100%;word-break:normal;tab-size:4}*,:before,:after{background-repeat:no-repeat;box-sizing:border-box}:before,:after{text-decoration:inherit;vertical-align:inherit}*{padding:0;margin:0}hr{overflow:visible;height:0;color:inherit;border:0;border-top:1px solid}details,main{display:block}summary{display:list-item}small{font-size:80%}[hidden]{display:none!important}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}a{background-color:transparent}a:active,a:hover{outline-width:0}code,kbd,pre,samp{font-family:monospace}pre{font-size:1em}b,strong{font-weight:bolder}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{border-color:inherit;text-indent:0}iframe{border-style:none}input{border-radius:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-decoration{appearance:none}textarea{overflow:auto;resize:vertical}button,input,optgroup,select,textarea{font:inherit;color:inherit}optgroup{font-weight:700}button{overflow:visible}button,select{text-transform:none}button,[type=button],[type=reset],[type=submit],[role=button]{cursor:pointer}button::-moz-focus-inner,[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner{border-style:none;padding:0}button,html [type=button],[type=reset],[type=submit]{appearance:auto}button,input,select,textarea{background-color:transparent;border-style:none}button:-moz-focusring,[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner{outline:1px dotted ButtonText}select{appearance:none}a:focus,button:focus,input:focus,select:focus,textarea:focus{outline-width:0}select::-ms-expand{display:none}select::-ms-value{color:currentcolor}legend{border:0;color:inherit;display:table;white-space:normal;max-width:100%}::-webkit-file-upload-button{appearance:auto;color:inherit;font:inherit}[disabled]{cursor:default}img{border-style:none}progress{vertical-align:baseline}[aria-busy=true]{cursor:progress}[aria-controls]{cursor:pointer}[aria-disabled=true]{cursor:default}ul,ol{list-style-type:none}figure{margin:0}@keyframes slide-in{0%{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}.gradient-blue{background:radial-gradient(106.41% 128.47% at 50.15% 128.47%,#23abff,#3066ff)}.gradient-green{background:radial-gradient(92.26% 118.88% at 50.15% .13%,#00c3c3,#00aab3)}.gradient-purple{background:radial-gradient(165.12% 115.56% at 50.15% .13%,#a15aff,#00a0eb)}.bg-blue{background-color:#f2f5ff}.bg-purple{background-color:#f7f0ff}.bg-green{background-color:#ebffed}.lock-screen{font-family:FigtreeVF,sans-serif;letter-spacing:normal;position:fixed;z-index:2147483638;right:24px;bottom:24px;width:327px;border-radius:24px;overflow:hidden;box-shadow:0 24px 32px #00000014;animation:slide-in .3s ease-in-out forwards}.lock-screen__content{position:relative;padding:24px 24px 64px}.lock-screen__close{position:absolute;top:16px;right:16px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;opacity:.5}.lock-screen__label{height:26px;width:fit-content;border-radius:50px;background-color:#fff3;padding-inline:16px;display:flex;align-items:center;justify-content:center;gap:8px;color:#fff;font-size:12px;line-height:18px;margin:-8px auto 16px}.lock-screen__title{color:#fff;text-align:center;font-size:20px;line-height:28px;font-weight:600;margin-bottom:8px}.lock-screen__description{color:#f5f6f7;text-align:center;font-size:14px;line-height:20px}.lock-screen__description b{font-weight:600}.lock-screen__card{position:relative;z-index:1;margin-top:-44px;background-color:#fff;border-radius:24px;padding:32px 20px 20px}.lock-screen__inner{margin-bottom:24px}.lock-screen__submit{display:flex;align-items:center;justify-content:center;gap:10px;font-weight:700;font-size:16px;height:40px;width:100%;border-radius:12px;padding-inline:16px;background-color:#f70;color:#fff;margin-bottom:16px}.lock-screen__skip{display:flex;align-items:center;justify-content:center;font-size:14px;line-height:20px;color:#82829c;margin-inline:auto}.price-card{border:1px solid #f2f2fc;background:linear-gradient(254.14deg,#fafbff .04%,#f5f8ff 100.04%);border-radius:24px;padding:24px 28px}.price-card__label{color:#4a5764;text-align:center;font-size:14px;line-height:20px;text-transform:uppercase;margin-bottom:16px}.price-card__price{display:flex;justify-content:center;align-items:flex-start;column-gap:2px;margin-bottom:12px}.price-card__currency{color:#515478;font-size:18px;line-height:28px}.price-card__number{color:#14142a;text-align:center;font-size:64px;line-height:54px}.price-card__wrap{display:flex;flex-direction:column}.price-card__decimal{color:#515478;font-size:18px;line-height:28px;font-weight:600}.price-card__period{color:#515478;font-size:14px;line-height:20px;margin-top:-6px}.price-card__discount{position:relative;display:flex;align-items:center;justify-content:center;margin-bottom:12px}.price-card__discount-divider{position:absolute;z-index:0;top:50%;left:0;width:100%;height:1px;background-color:#dbe2f9;transform:translateY(-50%)}.price-card__discount-icon{position:absolute;z-index:1;top:50%;left:50%;transform:translate(-50%,-50%)}.price-card__discount-text{position:relative;z-index:2;color:#fff;font-size:12px;font-weight:600;line-height:18px}.price-card__features{display:flex;align-items:center;justify-content:center;column-gap:16px}.price-card__feature{color:#222e3a;font-size:14px;line-height:20px;display:flex;align-items:center;gap:6px}.price-card__feature:before{content:"";display:block;width:4px;height:4px;background-color:#20df9e;border-radius:50%;flex-shrink:0}.features-list{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.features-list__item{display:flex;flex-direction:column;align-items:center;gap:6px}.features-list__icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center}.features-list__text{color:#293a53;text-align:center;font-size:16px;line-height:24px;letter-spacing:-.1px}</style></template><style>@font-face{font-family:FigtreeVF;src:url(chrome-extension://panammoooggmlehahpcjckcncfeffcoi/fonts/FigtreeVF.woff2) format("woff2 supports variations"),url(chrome-extension://panammoooggmlehahpcjckcncfeffcoi/fonts/FigtreeVF.woff2) format("woff2-variations");font-weight:100 1000;font-display:swap}</style></veepn-lock-screen></body></html>
